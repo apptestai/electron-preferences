@@ -40,23 +40,9 @@ class ButtonField extends React.Component {
 
 	}
 
-	get next() {
-
-		if (!this.idx) {
-
-			this.idx = 0;
-
-		}
-
-		this.idx += 1;
-
-		return this.idx;
-
-	}
-
 	onClick() {
 
-		return this.props.onChange(this.next);
+		return this.props.onChange(true);
 
 	}
 

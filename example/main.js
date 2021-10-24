@@ -10,8 +10,9 @@ const preferences = require('./preferences');
 
 nativeTheme.themeSource = preferences.preferences?.theme?.theme ?? 'system';
 
-preferences.on('save', preferences => {
+preferences.on('save', (key, preferences) => {
 
+	console.log(key);
 	console.log('Preferences were saved.', JSON.stringify(preferences, null, 4));
 
 	nativeTheme.themeSource = preferences?.theme?.theme ?? 'system';

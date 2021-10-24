@@ -16,9 +16,9 @@ const preferences = api.getPreferences();
 
 const sections = allSections.filter(section => _.isBoolean(section.enabled) ? section.enabled : true);
 
-const dSavePreferences = debounce(preferences => {
+const dSavePreferences = debounce((key, preferences) => {
 
-	api.setPreferences(preferences);
+	api.setPreferences(key, preferences);
 
 }, 200);
 
@@ -72,7 +72,7 @@ class App extends React.Component {
 			preferences,
 		});
 
-		dSavePreferences(preferences);
+		dSavePreferences(key, preferences);
 
 	}
 
