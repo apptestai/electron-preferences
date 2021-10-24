@@ -19,9 +19,9 @@ const preferences = new ElectronPreferences({
 		},
 		// ...
 	},
-	debug: false, //true will open the dev tools
+	debug: true,
 	webPreferences: {
-		webSecurity: true
+		webSecurity: true,
 	},
 	browserWindowOverrides: {
 		title: 'My Electron Preferences',
@@ -36,6 +36,11 @@ const preferences = new ElectronPreferences({
 					{
 						label: 'About You',
 						fields: [
+							{
+								label: 'Button Test',
+								key: 'abc-button',
+								type: 'button',
+							},
 							{
 								label: 'First Name',
 								key: 'firstName',

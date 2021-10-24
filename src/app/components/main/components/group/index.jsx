@@ -7,6 +7,7 @@ import TextField from './components/fields/text';
 import MessageField from './components/fields/message';
 import DropdownField from './components/fields/dropdown';
 import CheckboxField from './components/fields/checkbox';
+import ButtonField from './components/fields/button';
 import RadioField from './components/fields/radio';
 import SliderField from './components/fields/slider';
 import AcceleratorField from './components/fields/accelerator';
@@ -20,6 +21,7 @@ const fieldMap = {
 	message: MessageField,
 	dropdown: DropdownField,
 	checkbox: CheckboxField,
+	button: ButtonField,
 	radio: RadioField,
 	slider: SliderField,
 	accelerator: AcceleratorField,
