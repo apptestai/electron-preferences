@@ -233,7 +233,7 @@ const preferences = new ElectronPreferences({
 								label: 'Best places to visit',
 								key: 'places',
 								type: 'list',
-								size: 10,
+								size: 50,
 								style: {
 									width: '75%',
 								},

@@ -1,5 +1,5 @@
 'use strict';
-
+const _ = require('lodash');
 const electron = require('electron');
 const { app } = electron;
 const { nativeTheme } = electron;
@@ -10,13 +10,19 @@ const preferences = require('./preferences');
 
 nativeTheme.themeSource = preferences.preferences?.theme?.theme ?? 'system';
 
-preferences.on('save', (key, preferences) => {
+preferences.on('save', (key, data) => {
 
+	console.log(preferences);
 	console.log(key);
-	console.log('Preferences were saved.', JSON.stringify(preferences, null, 4));
+	console.log('Preferences were saved.', JSON.stringify(data, null, 4));
 
-	nativeTheme.themeSource = preferences?.theme?.theme ?? 'system';
-
+	// nativeTheme.themeSource = preferences?.theme?.theme ?? 'system';
+	// const places = Object.freeze(_.cloneDeep(data.lists.places));
+	// places.push('ZZZZZ');
+	// preferences.value('places', places);
+	const wakeUpTime = Date.now() + 10000;
+  	while (Date.now() < wakeUpTime) {}
+	console.log("CCCCCCCCCC");
 });
 
 let mainWindow;

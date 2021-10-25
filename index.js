@@ -129,7 +129,7 @@ class ElectronPreferences extends EventEmitter2 {
 			this.save();
 			this.broadcast();
 			this.emit('save', key, Object.freeze(_.cloneDeep(this.preferences)));
-			event.returnValue = null;
+			event.returnValue = true;
 
 		});
 

@@ -41,6 +41,7 @@
     "webpack-cli": "^4.7.2"
   },
   "dependencies": {
+    "@material-ui/core": "^4.12.3",
     "eslint": "^7.30.0",
     "eslint-plugin-react": "^7.24.0",
     "eventemitter2": "^6.4.4",
@@ -48,6 +49,7 @@
     "lodash": "^4.17.21",
     "react-color": "^2.19.3",
     "react-modal": "^3.14.3",
+    "styled-components": "^5.3.3",
     "write-json-file": "^4.3.0",
     "xo": "^0.41.0"
   },

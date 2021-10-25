@@ -10,6 +10,7 @@ import debounce from './utils/debounce';
 import Sidebar from './components/sidebar';
 import Main from './components/main';
 import '../../scss/style.scss';
+import Spinner from './components/main/spinner';
 
 const allSections = api.getSections();
 const preferences = api.getPreferences();
@@ -41,6 +42,7 @@ class App extends React.Component {
 			sections,
 			activeSection: sections[0].id,
 			preferences,
+			loading: false,
 		};
 
 	}
@@ -51,6 +53,7 @@ class App extends React.Component {
 			<React.Fragment>
 				<Sidebar { ...this.state } onSelectSection={ this.onSelectSection.bind(this) } />
 				<Main { ...this.state } onFieldChange={ this.onFieldChange.bind(this) } />
+				{this.state.loading && <Spinner/>}
 			</React.Fragment>
 		);
 
@@ -71,7 +74,6 @@ class App extends React.Component {
 		this.setState({
 			preferences,
 		});
-
 		dSavePreferences(key, preferences);
 
 	}
