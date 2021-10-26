@@ -14,7 +14,7 @@ class ElectronPreferences extends EventEmitter2 {
   constructor(options = {}) {
     super();
 
-    const map = new Map(); // Type이 button인 값의 key값을 정리한 map
+    const buttonMap = new Map(); // Type이 button인 값의 key값을 정리한 map
 
     _.defaultsDeep(options, {
       sections: [],
@@ -33,7 +33,7 @@ class ElectronPreferences extends EventEmitter2 {
         // Type이 button인 경우 key값 저장하기 (map 형식으로 저장)
         group.fields.map((field, fieldIdx) => {
           if (field.type === "button") {
-            return map.set(field.key, true);
+            return buttonMap.set(field.key, true);
           }
         });
         group.id = "group" + sectionIdx + groupIdx;
@@ -105,15 +105,15 @@ class ElectronPreferences extends EventEmitter2 {
       this.preferences = value;
       this.save();
       // Key 값이 map에 있는 경우 (type이 button인 경우) setLoading 함수 실행
-      if (map.get(key)) {
+      if (buttonMap.get(key)) {
         this.setLoading(true);
       }
 
       this.broadcast();
       this.emit("save", key, Object.freeze(_.cloneDeep(this.preferences)));
       event.returnValue = true;
-      // Preference 변경이 끝난 후 loading 화면 제거
-      if (event.returnValue) {
+
+      if (buttonMap.get(key)) {
         this.setLoading(false);
       }
     });
