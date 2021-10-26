@@ -1,20 +1,18 @@
-"use strict";
+'use strict';
 
-const electron = require("electron");
+const electron = require('electron');
 const { app, BrowserWindow, ipcMain, webContents, dialog } = electron;
-const path = require("path");
-const url = require("url");
-const fs = require("fs");
-const _ = require("lodash");
-const { EventEmitter2 } = require("eventemitter2");
-const loadJsonFile = require("load-json-file");
-const writeJsonFile = require("write-json-file");
+const path = require('path');
+const url = require('url');
+const fs = require('fs');
+const _ = require('lodash');
+const { EventEmitter2 } = require('eventemitter2');
+const loadJsonFile = require('load-json-file');
+const writeJsonFile = require('write-json-file');
 
 class ElectronPreferences extends EventEmitter2 {
   constructor(options = {}) {
     super();
-
-    const buttonMap = new Map(); // Type이 button인 값의 key값을 정리한 map
 
     _.defaultsDeep(options, {
       sections: [],
@@ -30,14 +28,7 @@ class ElectronPreferences extends EventEmitter2 {
         },
       });
       section.form.groups = section.form.groups.map((group, groupIdx) => {
-        // Type이 button인 경우 key값 저장하기 (map 형식으로 저장)
-        group.fields.map((field, fieldIdx) => {
-          if (field.type === "button") {
-            return buttonMap.set(field.key, true);
-          }
-        });
-        group.id = "group" + sectionIdx + groupIdx;
-
+        group.id = 'group' + sectionIdx + groupIdx;
         return group;
       });
     });
@@ -75,50 +66,39 @@ class ElectronPreferences extends EventEmitter2 {
 
     this.save();
 
-    ipcMain.on("showPreferences", (_) => {
+    ipcMain.on('showPreferences', (_) => {
       this.show();
     });
 
-    ipcMain.on("getSections", (event) => {
+    ipcMain.on('getSections', (event) => {
       event.returnValue = this.options.sections;
     });
 
-    ipcMain.on("restoreDefaults", (_) => {
+    ipcMain.on('restoreDefaults', (_) => {
       this.preferences = this.defaults;
       this.save();
       this.broadcast();
     });
 
-    ipcMain.on("getDefaults", (event) => {
+    ipcMain.on('getDefaults', (event) => {
       event.returnValue = this.defaults;
     });
 
-    ipcMain.on("getPreferences", (event) => {
+    ipcMain.on('getPreferences', (event) => {
       // Renderer process(브라우저) 에서 getPreferences 호출시 발생
       //   console.log("GET_PREFEREMNCE");
       event.returnValue = this.preferences;
     });
 
-    ipcMain.on("setPreferences", (event, key, value) => {
-      // Renderer process(브라우저) 에서 value 변경시 발생
-      // console.log("SET_PREFERENCE");
+    ipcMain.on('setPreferences', (event, key, value) => {
       this.preferences = value;
       this.save();
-      // Key 값이 map에 있는 경우 (type이 button인 경우) setLoading 함수 실행
-      if (buttonMap.get(key)) {
-        this.setLoading(true);
-      }
-
       this.broadcast();
-      this.emit("save", key, Object.freeze(_.cloneDeep(this.preferences)));
+      this.emit('save', key, Object.freeze(_.cloneDeep(this.preferences)));
       event.returnValue = true;
-
-      if (buttonMap.get(key)) {
-        this.setLoading(false);
-      }
     });
 
-    ipcMain.on("showOpenDialog", (event, dialogOptions) => {
+    ipcMain.on('showOpenDialog', (event, dialogOptions) => {
       event.returnValue = dialog.showOpenDialogSync(dialogOptions);
     });
 
@@ -178,19 +158,19 @@ class ElectronPreferences extends EventEmitter2 {
 
   broadcast() {
     webContents.getAllWebContents().forEach((wc) => {
-      wc.send("preferencesUpdated", this.preferences);
+      wc.send('preferencesUpdated', this.preferences);
     });
   }
 
   setLoading(isLoading) {
     webContents.getAllWebContents().forEach((wc) => {
-      wc.send("isLoading", isLoading);
+      wc.send('isLoading', isLoading);
     });
   }
 
   getBrowserWindowOptions() {
     let browserWindowOpts = {
-      title: "Preferences",
+      title: 'Preferences',
       width: 800,
       maxWidth: 800,
       height: 600,
@@ -198,7 +178,7 @@ class ElectronPreferences extends EventEmitter2 {
       resizable: false,
       acceptFirstMouse: true,
       maximizable: false,
-      backgroundColor: "#E7E7E7",
+      backgroundColor: '#E7E7E7',
       show: false,
       webPreferences: this.options.webPreferences,
     };
@@ -206,7 +186,7 @@ class ElectronPreferences extends EventEmitter2 {
     const defaultWebPreferences = {
       nodeIntegration: false,
       enableRemoteModule: false,
-      preload: path.join(__dirname, "./preload.js"),
+      preload: path.join(__dirname, './preload.js'),
     };
 
     const unOverridableWebPreferences = {
@@ -218,14 +198,14 @@ class ElectronPreferences extends EventEmitter2 {
     if (this.options.browserWindowOverrides) {
       browserWindowOpts = Object.assign(
         browserWindowOpts,
-        this.options.browserWindowOverrides
+        this.options.browserWindowOverrides,
       );
     }
 
     if (browserWindowOpts.webPreferences) {
       browserWindowOpts.webPreferences = Object.assign(
         defaultWebPreferences,
-        browserWindowOpts.webPreferences
+        browserWindowOpts.webPreferences,
       );
     } else {
       browserWindowOpts.webPreferences = defaultWebPreferences;
@@ -233,7 +213,7 @@ class ElectronPreferences extends EventEmitter2 {
 
     browserWindowOpts.webPreferences = Object.assign(
       browserWindowOpts.webPreferences,
-      unOverridableWebPreferences
+      unOverridableWebPreferences,
     );
 
     return browserWindowOpts;
@@ -260,23 +240,23 @@ class ElectronPreferences extends EventEmitter2 {
 
     this.prefsWindow.loadURL(
       url.format({
-        pathname: path.join(__dirname, "build/index.html"),
-        protocol: "file:",
+        pathname: path.join(__dirname, 'build/index.html'),
+        protocol: 'file:',
         slashes: true,
-      })
+      }),
     );
 
-    this.prefsWindow.once("ready-to-show", () => {
+    this.prefsWindow.once('ready-to-show', () => {
       // Show: false by default, then show when ready to prevent page "flicker"
       this.prefsWindow.show();
     });
 
-    this.prefsWindow.webContents.on("dom-ready", async () => {
+    this.prefsWindow.webContents.on('dom-ready', async () => {
       // Load custom css file
       if (this.options.css) {
         const file = path
           .join(app.getAppPath(), this.options.css)
-          .replace(/\\/g, "/"); // Make sure it also works in Windows
+          .replace(/\\/g, '/'); // Make sure it also works in Windows
 
         try {
           if (await fs.promises.stat(file)) {
@@ -295,7 +275,7 @@ class ElectronPreferences extends EventEmitter2 {
       }
     });
 
-    this.prefsWindow.on("closed", () => {
+    this.prefsWindow.on('closed', () => {
       this.prefsWindow = null;
     });
 
