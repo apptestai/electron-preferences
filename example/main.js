@@ -22,7 +22,7 @@ preferences.on('save', (key, data) => {
     // preferences.value('places', places);
     const wakeUpTime = Date.now() + 10000;
     while (Date.now() < wakeUpTime) {}
-    console.log('CCCCCCCCCC');
+    // console.log('CCCCCCCCCC');
     preferences.setLoading(false);
   }
 });
