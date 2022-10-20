@@ -12,7 +12,6 @@ class CheckboxField extends React.Component {
     const fieldID = `checkbox_${newGuid()}`;
 
     const options = this.options.map((option, idx) => {
-      console.log(option, '!!!');
       // If only a single checkbox is being rendered, this allows you the ability to pass
       // a boolean default value instead of ['value'], for convenience.
       if (typeof value === 'boolean' && this.options.length === 1) {
@@ -33,7 +32,7 @@ class CheckboxField extends React.Component {
             onChange={this.onChange.bind(this)}
             checked={checked}
             aria-label={option.label}
-            disabled={option.disabled ? 'disabled' : ''}
+            disabled={JSON.parse(option.value).disable ? 'disabled' : ''}
           />
           <span className="check-square" />
         </label>
